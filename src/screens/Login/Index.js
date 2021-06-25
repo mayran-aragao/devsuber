@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {StatusBar, ActivityIndicator} from 'react-native';
 import {  CommonActions } from '@react-navigation/native';
 import { connect } from 'react-redux';
-import useDevsUberApi from '../../useDevsUberApi';
+import useDevsUberApi from '../../api/useDevsUberApi';
+import { LogBox } from 'react-native';
 import {
   Container,
   Header,
@@ -23,6 +24,7 @@ import {
 const Login = (props)=>{
 
   const api = useDevsUberApi();
+  LogBox.ignoreAllLogs();
 
   const [activeMenu, setActiveMenu] = useState('signin');
   const [name, setName] = useState('');
@@ -40,6 +42,7 @@ const Login = (props)=>{
         alert(res.error);
       } else {
           props.setToken(res.token);
+          props.setName(res.name);
           props.navigation.dispatch(CommonActions.reset({
             index:0,
             routes:[
@@ -60,6 +63,7 @@ const Login = (props)=>{
           alert(res.error);
         } else {
             props.setToken(res.token);
+            props.setName(res.name);
             props.navigation.dispatch(CommonActions.reset({
               index:0,
               routes:[
@@ -130,7 +134,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return{
-          setToken:(token)=>dispatch({type:'SET_TOKEN',payload:{token}})
+          setToken:(token)=>dispatch({type:'SET_TOKEN',payload:{token}}),
+          setName:(name)=>dispatch({type:'SET_NAME',payload:{name}})
   };
 }
 
